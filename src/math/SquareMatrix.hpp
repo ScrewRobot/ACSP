@@ -298,20 +298,41 @@ SquareMatrix<Type, M> diag(Vector<Type, M> d)
 }
 
 template<typename Type, size_t M>
-SquareMatrix<Type, M> expm(const Matrix<Type, M, M> &A, size_t order = 5)
+SquareMatrix<Type, M> expm(const Matrix<Type, M, M> &A)
 {
-	SquareMatrix<Type, M> res;
-	SquareMatrix<Type, M> A_pow = A;
-	res.setIdentity();
-	size_t i_factorial = 1;
+    // ref: https://people.sc.fsu.edu/~jburkardt/cpp_src/matrix_exponential/matrix_exponential.html
+    Matrix<Type, M, M> A2 = A;
+    auto a_norm = norm_inf(A);
+    int ee = ( int ) ( log2( a_norm ) ) + 1;
+    int s = (0 > ee + 1) ? 0 : (ee + 1);
+    double t = 1.0 / pow(2, s);
+    A2 = A2*t;
+    auto x = A2;
+    auto c = 0.5;
+    auto e = eye<Type, M>();
+    e = e + c*A2;
+    auto d = eye<Type, M>();
+    d = d - c*A2;
+    int p = 1;
+    int q = 6;
+    for (int k = 2; k <= q; ++k)
+    {
+        c = c * ( double ) ( q - k + 1 ) / ( double ) ( k * ( 2 * q - k + 1 ) );
+        x = A2*x;
+        e = c*x + e;
+        if (p)
+            d = c*x + d;
+        else
+            d = -c*x + d;
+        p = !p;
+    }
+    e = inv(d) * e;
+    for (int k = 1; k <= s; ++k)
+    {
+        e = e*e;
+    }
 
-	for (size_t i = 1; i <= order; i++) {
-		i_factorial *= i;
-		res += A_pow / Type(i_factorial);
-		A_pow *= A_pow;
-	}
-
-	return res;
+	return e;
 }
 
 
