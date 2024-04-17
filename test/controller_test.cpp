@@ -1,8 +1,6 @@
 #include "doctest/doctest.h"
 #include <iostream>
-#include "math/math.hpp"
-#include "LTI/LTI.hpp"
-#include "Controller/ADRC.hpp"
+#include "ACSP.hpp"
 using namespace ACSP::math;
 using namespace ACSP::LTI;
 using namespace ACSP::Controller;
