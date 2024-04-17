@@ -5,9 +5,7 @@
 #include <algorithm>
 #include <vector>
 
-#include "math/math.hpp"
-#include "LTI/LTI.hpp"
-#include "Controller/ADRC.hpp"
+#include "ACSP.hpp"
 
 int main() {
     using namespace ACSP::math;
