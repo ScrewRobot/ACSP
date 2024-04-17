@@ -11,23 +11,28 @@
 
 int main() {
     using namespace ACSP::math;
-    using namespace ACSP::LTI;
-    using namespace ACSP::Controller;
-    using namespace std;
+    SquareMatrix<double, 3> A;
 
-    StateSpace<2, 1, 1> Plant;
-    Plant.cleanAll();
-    Plant.A(0, 1) = 1;
-    Plant.B(1, 0) = 1;
-    Plant.C(0, 0) = 1;
+    double v[3] = {0,0,1};
 
-    LADRC2 adrc;
+    A(0, 0) = 0;
+    A(0, 1) = -v[2];
+    A(0, 2) = v[1];
+    A(1, 0) = v[2];
+    A(1, 1) = 0;
+    A(1, 2) = -v[0];
+    A(2, 0) = -v[1];
+    A(2, 1) = v[0];
+    A(2, 2) = 0;
 
-    adrc.wc = 10;
-    adrc.wo = 100;
-    assert(adrc.b0 == 1.0);
-    assert(adrc.bound[0] == -100);
-    assert(adrc.bound[1] == 100);
+    auto res = expm(A);
+
+//    auto x= res.slice<2,2>(0,0);
+    SquareMatrix<double, 2> x(res.slice<2,2>(0,0));
+
+
+
+    std::cout << x << std::endl;
 
 
     return EXIT_SUCCESS;

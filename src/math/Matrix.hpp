@@ -567,6 +567,40 @@ namespace ACSP::math {
     }
 
     template<typename Type, size_t M, size_t N>
+    double norm_inf(const Matrix<Type, M, N> &mat)
+    {
+        double norm = 0.0;
+        double sum = 0.0;
+        for (size_t i = 0; i < M; ++i)
+        {
+            sum = 0.0;
+            for (size_t j = 0; j < N; ++j)
+            {
+                sum += abs(mat(i,j));
+            }
+            norm = (norm > sum) ? norm : sum;
+        }
+        return norm;
+    }
+
+    template<typename Type, size_t M, size_t N>
+    double norm_one(const Matrix<Type, M, N> &mat)
+    {
+        double norm = 0.0;
+        double sum = 0.0;
+        for (size_t j = 0; j < N; ++j)
+        {
+            sum = 0.0;
+            for (size_t i = 0; i < M; ++i)
+            {
+                sum += abs(mat(i,j));
+            }
+            norm = (norm > sum) ? norm : sum;
+        }
+        return norm;
+    }
+
+    template<typename Type, size_t M, size_t N>
     Matrix<Type, M, N> operator*(Type scalar, const Matrix<Type, M, N> &other) {
         return other * scalar;
     }
