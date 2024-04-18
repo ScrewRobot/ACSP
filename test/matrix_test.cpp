@@ -88,3 +88,42 @@ TEST_CASE("matrix expm test") {
     CHECK(res(2,2) == doctest::Approx(1.0).epsilon(1E-12));
 
 }
+
+
+TEST_CASE("pinv test 1") {
+    Matrix<double, 3, 4> A({1,2,3,4,5,6,7,8,9,10,11,12});
+    auto A_pinv = pinv(A);
+
+    auto check_1 = A* A_pinv * A;
+    CHECK(A == check_1);
+
+    auto check_2 = A_pinv * A * A_pinv;
+    CHECK(A_pinv == check_2);
+
+    auto check_3 = A*A_pinv;
+    CHECK(check_3 == check_3.T());
+
+    auto check_4 = A_pinv * A;
+    CHECK(check_4 == check_4.T());
+
+
+}
+
+TEST_CASE("pinv test 2") {
+    Matrix<double, 4, 3> A({1,2,3,4,5,6,7,8,9,10,11,12});
+    auto A_pinv = pinv(A);
+
+    auto check_1 = A* A_pinv * A;
+    CHECK(A == check_1);
+
+    auto check_2 = A_pinv * A * A_pinv;
+    CHECK(A_pinv == check_2);
+
+    auto check_3 = A*A_pinv;
+    CHECK(check_3 == check_3.T());
+
+    auto check_4 = A_pinv * A;
+    CHECK(check_4 == check_4.T());
+
+
+}
