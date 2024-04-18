@@ -1,20 +1,13 @@
+#include "doctest/doctest.h"
 #include <iostream>
-#include <cmath>
-#include <limits>
-#include <iterator>
-#include <algorithm>
-#include <vector>
-
 #include "ACSP.hpp"
 
 using namespace ACSP::math;
-using namespace ACSP::Controller;
 using namespace ACSP::LTI;
+using namespace ACSP::Controller;
 
 
-
-int main() {
-
+TEST_CASE("Kalman Filter Test : feedback control") {
     constexpr int dim = 2;
     constexpr int out_dim = 1;
 
@@ -27,7 +20,7 @@ int main() {
     Matrix<double, out_dim, dim> H;
     H.setZero();
 
-    KalmanFilter kalman(A,B,C,D,G,H);
+    KalmanFilter kalman(A, B, C, D, G, H);
 
     SquareMatrix<double, dim> Q;
     SquareMatrix<double, out_dim> R;
@@ -35,20 +28,19 @@ int main() {
     SquareMatrix<double, dim> P;
 
     Q = eye<double, dim>() * 0.05;
-    R(0,0) = 1;
+    R(0, 0) = 1;
     N.setZero();
     P.setIdentity();
-    kalman.init(Q,R,N,P);
+    kalman.init(Q, R, N, P);
 
 
-    DiscreteStateSpace<2,1,1> ss;
+    DiscreteStateSpace<2, 1, 1> ss;
     ss.A = A;
     ss.B = B;
     ss.C = C;
     ss.D = D;
 
-    double target = 1;
-
+    double target = 1.23;
 
 
     double t = 0;
@@ -56,8 +48,7 @@ int main() {
     Vector<double, 1> u;
     auto x = kalman.getState();
 
-    while (t < 5)
-    {
+    while (t < 10) {
 
         u(0) = (target - x(0)) * 100 + (0 - x(1)) * 20;
 
@@ -70,8 +61,8 @@ int main() {
         x = kalman.getState();
         t += 1e-3;
 
-        std::cout << "t: " << t << " u:" << u(0) << " y: " << y(0) << " x1: " << x(0) << " x2: " << x(1) << std::endl;
-
+//        std::cout << "t: " << t << " u:" << u(0) << " y: " << y(0) << " x1: " << x(0) << " x2: " << x(1) << std::endl;
     }
-    return EXIT_SUCCESS;
+    CHECK(target == doctest::Approx(x(0)).epsilon(1E-2));
+
 }
