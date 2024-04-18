@@ -36,6 +36,15 @@ namespace ACSP::math {
             }
         }
 
+        explicit Matrix(const std::array<Type, M * N> data_)        // row first
+        {
+            for (size_t i = 0; i < M; i++) {
+                for (size_t j = 0; j < N; j++) {
+                    _data[i][j] = data_[N * i + j];
+                }
+            }
+        }
+
         explicit Matrix(const Type data_[M][N])         // M row N col
         {
             for (size_t i = 0; i < M; i++) {
