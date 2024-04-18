@@ -31,6 +31,10 @@ public:
 		Matrix<Type, M, M>(data_)
 	{
 	}
+    explicit SquareMatrix(const std::array<Type, M*M> data_) :
+            Matrix<Type, M, M>(data_)
+    {
+    }
 
 	SquareMatrix(const Matrix<Type, M, M> &other) :
 		Matrix<Type, M, M>(other)

@@ -11,5 +11,6 @@
 #include "math/Slice.hpp"
 #include "math/Vector.hpp"
 #include "math/Scalar.hpp"
+#include "math/PseudoInverse.hpp"
 
 #endif //ACSP_MATH_HPP
