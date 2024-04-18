@@ -127,3 +127,11 @@ TEST_CASE("pinv test 2") {
 
 
 }
+
+TEST_CASE("pinv test 3") {
+    SquareMatrix<double, 4> A({1,2,3,4,2,3,4,1,3,4,1,2,4,1,2,3});
+
+    CHECK(pinv(A) == inv(A));
+
+
+}
