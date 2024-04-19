@@ -12,5 +12,6 @@
 #include "math/Vector.hpp"
 #include "math/Scalar.hpp"
 #include "math/PseudoInverse.hpp"
+#include "math/quadprog.hpp"
 
 #endif //ACSP_MATH_HPP

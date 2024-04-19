@@ -21,10 +21,15 @@ public:
 	{
 	}
 
-	explicit Vector(const Type data_[M]) :
-		MatrixM1(data_)
-	{
-	}
+    explicit Vector(const Type data_[M]) :
+            MatrixM1(data_)
+    {
+    }
+
+    explicit Vector(const std::array<Type, M>& data_) :
+            MatrixM1(data_)
+    {
+    }
 
 	template<size_t P, size_t Q>
 	Vector(const Slice<Type, M, 1, P, Q> &slice_in) :
@@ -42,21 +47,21 @@ public:
 		}
 	}
 
-	inline const Type &operator()(size_t i) const
-	{
-		assert(i < M);
+    inline const Type &operator()(size_t i) const
+    {
+        assert(i < M);
 
-		const MatrixM1 &v = *this;
-		return v(i, 0);
-	}
+        const MatrixM1 &v = *this;
+        return v(i, 0);
+    }
 
-	inline Type &operator()(size_t i)
-	{
-		assert(i < M);
+    inline Type &operator()(size_t i)
+    {
+        assert(i < M);
 
-		MatrixM1 &v = *this;
-		return v(i, 0);
-	}
+        MatrixM1 &v = *this;
+        return v(i, 0);
+    }
 
 	Type dot(const MatrixM1 &b) const
 	{
