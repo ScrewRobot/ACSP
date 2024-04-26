@@ -313,3 +313,30 @@ TEST_CASE("LADRC2 Test : reset during run")
 
 
 }
+
+TEST_CASE(" ControllabilityMatrix and  test")
+{
+    SquareMatrix<double, 3> A({0, 1, 3,
+                               -10, -2, 3,
+                               1, 2, 3});
+    Matrix<double, 3, 2> B({0, 1, 10, 2, 5, 3});
+    Matrix<double, 1, 3> C;
+    C(0,0) = 1;
+    StateSpace<3, 2, 1> Plant;
+    Plant.A = A;
+    Plant.B = B;
+    Plant.C = C;
+
+    auto Pc = Plant.ControllabilityMatrix();
+    Matrix<double, 3, 6> Pc_matlab({0  ,  1  ,  25  ,  11  , 100  ,  37,
+                                    10 ,   2 ,   -5 ,   -5 , -135 ,  -58,
+                                    5  ,  3  ,  35  ,  14  , 120  ,  43});
+    CHECK(Pc == Pc_matlab);
+
+
+    auto Po = Plant.ObservabilityMatrix();
+    Matrix<double, 3, 3> Po_matlab({     1 ,    0 ,    0,
+                                        0  ,   1  ,   3,
+                                        -7 ,    4 ,   12});
+    CHECK(Po == Po_matlab);
+}

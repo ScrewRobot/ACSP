@@ -172,6 +172,41 @@ namespace ACSP::LTI
 			t = 0;
 		}
 
+        // A = [N,N], B = [B, u_size]
+        // Pc = [B, AB, ..., A^(n-1)B] = [N, N*u_size]
+        matrix::Matrix<double, N, N*u_size> ControllabilityMatrix()
+        {
+            matrix::Matrix<double, N, N*u_size> Pc;
+            matrix::Matrix<double, N, N> temp;
+            temp.setIdentity();
+            for (size_t k = 0; k < N; ++k)
+            {
+                auto s = matrix::Slice<double, N, u_size, N, N*u_size>(0,k*u_size,&Pc);
+                s = temp * B;
+                temp = temp * A;
+            }
+
+            return Pc;
+        }
+
+
+        // A = [N,N], C = [y_size, N]
+        // Pc = [C; CA; ...; CA^(n-1)] = [N*y_size, N]
+        matrix::Matrix<double, N*y_size, N> ObservabilityMatrix()
+        {
+            matrix::Matrix<double, N*y_size, N> Po;
+            matrix::Matrix<double, N, N> temp;
+            temp.setIdentity();
+            for (size_t k = 0; k < N; ++k)
+            {
+                auto s = matrix::Slice<double, y_size, N, N*y_size, N>(k*y_size, 0 ,&Po);
+                s = C * temp;
+                temp = temp * A;
+            }
+
+            return Po;
+        }
+
 
 	};
 
