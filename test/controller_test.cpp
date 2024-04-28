@@ -340,3 +340,43 @@ TEST_CASE(" ControllabilityMatrix and  test")
                                         -7 ,    4 ,   12});
     CHECK(Po == Po_matlab);
 }
+
+
+TEST_CASE(" C2D and  test")
+{
+    SquareMatrix<double, 3> A({1,2,3,4,5,6,7,8,9});
+    Matrix<double, 3, 1> B({0,0,1});
+    Matrix<double, 1, 3> C({1, 0, 0});
+
+    StateSpace css(A,B,C);
+
+    auto dss1 = C2D(css, 1E-3, C2D_TYPE::Tustin);
+    auto dss2 = C2D(css, 1E-3, C2D_TYPE::ZOH);
+
+    Vector<double, 3> x({1.0,2.0,3.0});
+    Vector<double, 1> u({10.0});
+
+    css.setState(x);
+    dss1.setState(x);
+    dss2.setState(x);
+
+    css.setInput(u);
+    dss1.setInput(u);
+    dss2.setInput(u);
+
+    css.step(1e-3);
+    dss1.step(1e-3);
+    dss2.step(1e-3);
+
+    auto res = css.getOutput();
+    auto res1 = dss1.getOutput();
+    auto res2 = dss2.getOutput();
+
+    double tustin_res = 1.0213261180077715106762070718105;  //matlab tustin result
+    double zoh_res = 1.0141296847598906261112006177427;     //matlab zoh result
+
+    CHECK(res1(0) == doctest::Approx(tustin_res).epsilon(1E-6));
+    CHECK(res2(0) == doctest::Approx(zoh_res).epsilon(1E-6));
+
+
+}

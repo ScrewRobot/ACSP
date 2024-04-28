@@ -241,35 +241,37 @@ namespace ACSP::LTI
     C2D(const StateSpace<N, u_size, y_size, CatchLength> &css, double T = 1E-3, C2D_TYPE type = C2D_TYPE::Tustin) {
         DiscreteStateSpace<N, u_size, y_size, CatchLength> dss;
 
-        matrix::Matrix<double, N, N> A = css.A;
+        matrix::SquareMatrix<double, N> A = css.A;
         matrix::Matrix<double, N, u_size> B = css.B;
         matrix::Matrix<double, y_size, N> C = css.C;
         matrix::Matrix<double, y_size, u_size> D = css.D;
 
-        matrix::Matrix<double, N, N> Ad = matrix::Matrix<double, N, N>::Zero();
-        matrix::Matrix<double, N, u_size> Bd = matrix::Matrix<double, N, u_size>::Zero();
-        matrix::Matrix<double, y_size, N> Cd = matrix::Matrix<double, y_size, N>::Zero();
-        matrix::Matrix<double, y_size, u_size> Dd = matrix::Matrix<double, y_size, u_size>::Zero();
+        matrix::SquareMatrix<double, N> Ad;
+        matrix::Matrix<double, N, u_size> Bd;
+        matrix::Matrix<double, y_size, N> Cd;
+        matrix::Matrix<double, y_size, u_size> Dd;
 
-        matrix::Matrix<double, N, N> I = matrix::Matrix<double, N, N>::Identity();
+        matrix::SquareMatrix<double, N> I;
+        I.setIdentity();
 
 
         switch (type) {
             case C2D_TYPE::Tustin:  // C2D_TYPE::Tustin
             {
-                auto Ad_ = (I - A*(T/2)).inverse();
-                Ad = (I + A*(T/2))*Ad_;
+                matrix::SquareMatrix<double, N> Ad_ = I - A*(T/2);
+                auto Ad_inv = inv(Ad_);
+                Ad = (I + A*(T/2))*Ad_inv;
                 Bd = (Ad + I)*B*(T/2);
-                Cd = C*Ad_;
+                Cd = C*Ad_inv;
                 Dd = Cd*B*(T/2)+D;
             }break;
-            case C2D_TYPE::ZOH:     // C2D_TYPE::ZOH not implemented, using Tustin instead
+            case C2D_TYPE::ZOH:     // C2D_TYPE::ZOH
             {
-                auto Ad_ = (I - A*(T/2)).inverse();
-                Ad = (I + A*(T/2))*Ad_;
-                Bd = (Ad + I)*B*(T/2);
-                Cd = C*Ad_;
-                Dd = Cd*B*(T/2)+D;
+                Ad = matrix::expm(A * T);
+                auto Ad_ = matrix::expm(A * (0.5*T));
+                Bd = (Ad + 4.0*Ad_ + I)*B*(T/6.0);      // 辛普森法
+                Cd = C;
+                Dd = D;
             }break;
 
         }
