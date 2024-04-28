@@ -787,4 +787,47 @@ namespace ACSP::math {
         return os;
     }
 
+    template<typename Type, size_t M, size_t N1, size_t N2>
+    Matrix<Type, M, N1+N2> cat_row(Matrix<Type, M, N1> mat1, Matrix<Type, M, N2> mat2)
+    {
+        Matrix<Type, M, N1+N2> mat;
+        for (size_t i = 0; i < M; ++i)
+        {
+            for (size_t j = 0; j < N1; ++j) {
+                mat(i,j) = mat1(i,j);
+            }
+        }
+        for (size_t i = 0; i < M; ++i)
+        {
+            for (size_t j = 0; j < N2; ++j) {
+                mat(i,j+N1) = mat2(i,j);
+            }
+        }
+
+        return mat;
+
+    }
+
+    template<typename Type, size_t M1, size_t M2, size_t N>
+    Matrix<Type, M1+M2, N> cat_col(Matrix<Type, M1, N> mat1, Matrix<Type, M2, N> mat2)
+    {
+        Matrix<Type, M1+M2, N> mat;
+        for (size_t i = 0; i < M1; ++i)
+        {
+            for (size_t j = 0; j < N; ++j) {
+                mat(i,j) = mat1(i,j);
+            }
+        }
+        for (size_t i = 0; i < M2; ++i)
+        {
+            for (size_t j = 0; j < N; ++j) {
+                mat(i+M1,j) = mat2(i,j);
+            }
+        }
+
+        return mat;
+
+    }
+
+
 } // namespace matrix

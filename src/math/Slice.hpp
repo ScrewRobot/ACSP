@@ -1,4 +1,7 @@
 #pragma once
+#include <cmath>
+#include <cstdio>
+#include <cstring>
 
 #include "math/math.hpp"
 
@@ -323,5 +326,12 @@ private:
 	size_t _x0, _y0;
 	Matrix<Type, M, N> *_data;
 };
+
+template<typename OStream, typename Type, size_t P, size_t Q, size_t M, size_t N>
+OStream &operator<<(OStream &os, const matrix::Slice<Type, P,Q,M,N> &matrix) {
+    matrix::Matrix<Type, P, Q> mat = matrix;
+        os << matrix;
+        return os;
+    }
 
 }
