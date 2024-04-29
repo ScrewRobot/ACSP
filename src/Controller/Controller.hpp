@@ -3,6 +3,5 @@
 
 #include "Controller/ADRC.hpp"
 #include "Controller/KalmanFilter.hpp"
-#include "Controller/SISO.hpp"
 
 #endif //ACSP_CONTROLLER_HPP
