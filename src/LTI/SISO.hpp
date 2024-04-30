@@ -117,6 +117,48 @@ namespace ACSP::LTI::SISO
         StateSpace<N, 1, 1> ss;
     };
 
+
+
+    template <size_t N>
+    matrix::Matrix<double, 1, N> PolePlace_K(const matrix::Vector<double, N>& alpha, StateSpace<N, 1, 1>ss)
+    {
+        matrix::Matrix<double, 1, N> Iend;
+        Iend(0, N-1) = 1;
+        matrix::SquareMatrix<double, N> qA;
+        matrix::SquareMatrix<double, N> temp;
+
+        temp.setIdentity();
+        for (size_t k = 0; k < N; ++k)
+        {
+            qA += alpha(k) * temp;
+            temp = temp * ss.A;
+        }
+        qA += temp;
+        matrix::SquareMatrix<double, N> Pc = ss.ControllabilityMatrix();
+
+        return Iend * pinv(Pc) * qA;
+    }
+
+    template <size_t N>
+    matrix::Matrix<double, N, 1> PolePlace_L(const matrix::Vector<double, N>& beta, StateSpace<N, 1, 1>ss)
+    {
+        matrix::Matrix<double, N, 1> Iend;
+        Iend(N-1, 0) = 1;
+        matrix::SquareMatrix<double, N> pA;
+        matrix::SquareMatrix<double, N> temp;
+
+        temp.setIdentity();
+        for (size_t k = 0; k < N; ++k)
+        {
+            pA += beta(k) * temp;
+            temp = temp * ss.A;
+        }
+        pA += temp;
+        matrix::SquareMatrix<double, N> Po = ss.ObservabilityMatrix();
+
+        return pA * pinv(Po) * Iend;
+    }
+
 }
 
 
