@@ -13,6 +13,15 @@ namespace ACSP::math {
         static constexpr bool value = M == N;
     };
 
+    template <size_t M, size_t N>
+    struct is_row_vector {
+        static constexpr bool value = M == 1;
+    };
+
+    template <size_t M, size_t N>
+    struct is_col_vector {
+        static constexpr bool value = N == 1;
+    };
 
     namespace matrix = ACSP::math;
 
