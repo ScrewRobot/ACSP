@@ -89,6 +89,17 @@ namespace ACSP::math {
             }
         }
 
+
+        inline const size_t rows()
+        {
+            return M;
+        }
+
+        inline const size_t cols()
+        {
+            return N;
+        }
+
         /**
          * Accessors/ Assignment etc.
          */
