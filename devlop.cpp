@@ -34,5 +34,13 @@ int main() {
     std::cout << L << std::endl;
 
 
+    ACSP::math::matrix::Matrix<double, 3,3> A;
+    A.setIdentity();
+    A *= 2;
+    std::cout << A << std::endl;
+    std::cout << inv(A) << std::endl;
+
+
+
     return EXIT_SUCCESS;
 }

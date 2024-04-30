@@ -7,6 +7,13 @@
 #include "math/math.hpp"
 
 namespace ACSP::math {
+
+    template <size_t M, size_t N>
+    struct is_square {
+        static constexpr bool value = M == N;
+    };
+
+
     namespace matrix = ACSP::math;
 
     template<typename Type, size_t M>
@@ -828,6 +835,7 @@ namespace ACSP::math {
         return mat;
 
     }
+
 
 
 } // namespace matrix
