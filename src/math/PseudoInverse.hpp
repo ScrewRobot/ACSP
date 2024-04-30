@@ -126,7 +126,11 @@ namespace ACSP::math {
     }
 
     template <typename Type, size_t M, size_t N,
+<<<<<<< HEAD
             typename = std::enable_if_t<is_square<M, N>::value>>
+=======
+            typename = std::enable_if<is_square<M, N>::value>>
+>>>>>>> 93c66d73f13ad461a9fb1a1e386fd5bdcaa01f54
     matrix::Matrix<Type, N, M> inv(const matrix::Matrix<Type, M, N> &G) {
         Matrix<Type, N, M> res;
         pinv(G, res);
