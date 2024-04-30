@@ -1,7 +1,7 @@
 #pragma once
 
 #include "math/math.hpp"
-
+#include <type_traits>
 namespace ACSP::math {
 
 /**
@@ -125,5 +125,11 @@ namespace ACSP::math {
         return L;
     }
 
-
+    template <typename Type, size_t M, size_t N,
+            typename = std::enable_if_t<is_square<M, N>::value>>
+    matrix::Matrix<Type, N, M> inv(const matrix::Matrix<Type, M, N> &G) {
+        Matrix<Type, N, M> res;
+        pinv(G, res);
+        return res;
+    }
 } // namespace matrix
