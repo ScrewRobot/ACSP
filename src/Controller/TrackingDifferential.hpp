@@ -12,7 +12,7 @@ namespace ACSP::Controller
 
     namespace details
     {
-        int factorial(int n)
+        inline int factorial(int n)
         {
             int x = 1;
             for (int k = 1; k <= n; ++k)
@@ -20,7 +20,7 @@ namespace ACSP::Controller
             return x;
         }
 
-        int nchoosek(int n, int k)
+        inline int nchoosek(int n, int k)
         {
             return factorial(n) / factorial(n - k) / factorial(k);
         }
