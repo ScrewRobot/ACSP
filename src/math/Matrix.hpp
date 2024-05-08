@@ -7,6 +7,45 @@
 #include "math/math.hpp"
 
 namespace ACSP::math {
+
+    template <size_t M, size_t N>
+    struct is_square {
+        static constexpr bool value = M == N;
+    };
+
+    template <size_t M, size_t N>
+    struct is_row_vector {
+        static constexpr bool value = M == 1;
+    };
+
+    template <size_t M, size_t N>
+    struct is_col_vector {
+        static constexpr bool value = N == 1;
+    };
+
+
+    template <size_t M, size_t N>
+    struct is_less {
+        static constexpr bool value = M < N;
+    };
+
+    template <size_t M, size_t N>
+    struct is_less_or_equal {
+        static constexpr bool value = M <= N;
+    };
+
+    template <size_t M, size_t N>
+    struct is_greater {
+        static constexpr bool value = M > N;
+    };
+
+    template <size_t M, size_t N>
+    struct is_greater_or_equal {
+        static constexpr bool value = M >= N;
+    };
+
+
+
     namespace matrix = ACSP::math;
 
     template<typename Type, size_t M>
@@ -71,6 +110,17 @@ namespace ACSP::math {
                     self(i, j) = in_slice(i, j);
                 }
             }
+        }
+
+
+        inline const size_t rows()
+        {
+            return M;
+        }
+
+        inline const size_t cols()
+        {
+            return N;
         }
 
         /**
@@ -828,6 +878,7 @@ namespace ACSP::math {
         return mat;
 
     }
+
 
 
 } // namespace matrix
