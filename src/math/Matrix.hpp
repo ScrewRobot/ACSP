@@ -23,6 +23,29 @@ namespace ACSP::math {
         static constexpr bool value = N == 1;
     };
 
+
+    template <size_t M, size_t N>
+    struct is_less {
+        static constexpr bool value = M < N;
+    };
+
+    template <size_t M, size_t N>
+    struct is_less_or_equal {
+        static constexpr bool value = M <= N;
+    };
+
+    template <size_t M, size_t N>
+    struct is_greater {
+        static constexpr bool value = M > N;
+    };
+
+    template <size_t M, size_t N>
+    struct is_greater_or_equal {
+        static constexpr bool value = M >= N;
+    };
+
+
+
     namespace matrix = ACSP::math;
 
     template<typename Type, size_t M>
