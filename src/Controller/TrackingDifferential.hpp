@@ -74,6 +74,12 @@ namespace ACSP::Controller
 
         }
 
+        void update(double u, double dt=1E-3)
+        {
+            this->u(0) = u;
+            this->step(dt);
+        }
+
 
     };
 }

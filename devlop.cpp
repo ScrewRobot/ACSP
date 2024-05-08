@@ -28,12 +28,12 @@ int main() {
     {
         t += 1e-3;
 
-        ACSP::math::matrix::Vector<double, 1> u;
+        double u;
         if (t >= 1)
-            u(0) = 1;
+            u = 1;
         else
-            u(0) = 0;
-        ltd.setInput(u);
+            u = 0;
+        ltd.update(u);
         ltd.step(1e-3);
         auto y = ltd.getState();
         std::cout << " t : " << t << " x1 : " << y(0) << " x2 : " << y(1) << " x3 : " << y(2) << std::endl;
