@@ -602,6 +602,18 @@ namespace ACSP::math {
 
             return true;
         }
+
+        // !warning : this function does not check size inside
+        inline void copyToArray(Type* dataPtr)
+        {
+            memcpy(dataPtr, this->_data, sizeof(Type)*M*N);
+        }
+
+        // !warning : this function does not check size inside
+        inline void loadFromArray(Type* dataPtr)
+        {
+            memcpy(this->_data, dataPtr, sizeof(Type)*M*N);
+        }
     };
 
     template<typename Type, size_t M, size_t N>
