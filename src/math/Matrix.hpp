@@ -891,6 +891,12 @@ namespace ACSP::math {
 
     }
 
+    template<typename Type, size_t M, size_t N>
+    Type MaxAbs(Matrix<Type, M, N> m)
+    {
+        return m.abs().max();
+    }
+
 
 
 } // namespace matrix

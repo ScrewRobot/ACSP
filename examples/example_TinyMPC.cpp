@@ -1,10 +1,6 @@
 #include <iostream>
 #include <cmath>
-#include <limits>
-#include <iterator>
 #include <algorithm>
-#include <vector>
-
 #include "ACSP.hpp"
 
 using namespace ACSP::math;
@@ -417,9 +413,9 @@ int main() {
 
 
     int status = MPC::tiny_setup(&solver,
-                            Adyn, Bdyn, diag(Q), diag(R),
-                            rho_value,
-                            x_min, x_max, u_min, u_max, 0);
+                                 Adyn, Bdyn, diag(Q), diag(R),
+                                 rho_value,
+                                 x_min, x_max, u_min, u_max, 0);
 
     // Update whichever settings we'd like
     solver->settings->max_iter = 100;
