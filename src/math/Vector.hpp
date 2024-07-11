@@ -152,6 +152,13 @@ public:
 	}
 };
 
+template<typename Type, size_t M, size_t N, typename = std::enable_if_t<is_col_vector<M, N>::value>>
+Vector<Type, M> asVector(const Matrix<Type, M, N>& mat)
+{
+    return mat;
+}
+
+
 template<typename OStream, typename Type, size_t M>
 OStream &operator<<(OStream &os, const matrix::Vector<Type, M> &vector)
 {

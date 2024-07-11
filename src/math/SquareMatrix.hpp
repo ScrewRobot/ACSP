@@ -587,6 +587,12 @@ SquareMatrix <Type, M> choleskyInv(const SquareMatrix<Type, M> &A)
 	return L_inv.T() * L_inv;
 }
 
+template <typename Type, size_t M, size_t N, typename = std::enable_if_t<is_square<M, N>::value>>
+SquareMatrix <Type, M> asSquare(const Matrix<Type, M, N>& mat)
+{
+    return std::move(mat);
+}
+
 using Matrix3f = SquareMatrix<float, 3>;
 using Matrix3d = SquareMatrix<double, 3>;
 
