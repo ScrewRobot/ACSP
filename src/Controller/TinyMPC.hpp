@@ -2,7 +2,7 @@
 #define ACSP_TINYMPC_HPP
 
 
-#include "math/math.hpp"
+#include "FastMath.hpp"
 
 namespace ACSP::Controller
 {
@@ -14,7 +14,7 @@ namespace ACSP::Controller
 #define TINY_DEFAULT_EN_STATE_BOUND     (1)
 #define TINY_DEFAULT_EN_INPUT_BOUND     (1)
 
-    using namespace ACSP::math;
+    using namespace FastMath;
     using tinytype = double;
     // 状态数 nx
     // 输入数 nu

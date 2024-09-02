@@ -4,7 +4,7 @@
 
 
 TEST_CASE("ODE Test : First Order Integrator") {
-    using namespace ACSP::math;
+    using namespace FastMath;
     using namespace ACSP::LTI;
     using namespace std;
     State<1> y;
@@ -28,7 +28,7 @@ TEST_CASE("ODE Test : First Order Integrator") {
 }
 
 TEST_CASE("ODE Test : Second Order Integrator") {
-    using namespace ACSP::math;
+    using namespace FastMath;
     using namespace ACSP::LTI;
     using namespace std;
     State<2> y;

@@ -1,7 +1,7 @@
 #ifndef ACSP_TRACKINGDIFFERENTIAL_HPP
 #define ACSP_TRACKINGDIFFERENTIAL_HPP
 
-#include "math/math.hpp"
+#include "FastMath.hpp"
 #include "LTI/LTI.hpp"
 #include <array>
 namespace ACSP::Controller

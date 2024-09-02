@@ -1,14 +1,13 @@
 #ifndef ACSP_KALMANFILTER_HPP
 #define ACSP_KALMANFILTER_HPP
 
-#include "math/math.hpp"
+#include "FastMath.hpp"
 
 namespace ACSP::Controller
 {
-    namespace matrix = ACSP::math;
 
     template<size_t N>
-    using State = matrix::Vector<double, N>;
+    using State = FastMath::Vector<double, N>;
 
     // The plant has dim N, input dim = u_size, output dim = y_size
     // The plant is
@@ -44,24 +43,24 @@ namespace ACSP::Controller
 
 
         // system matrix
-        matrix::SquareMatrix<double, dim> A;
-        matrix::Matrix<double, dim, u_size> B;
-        matrix::Matrix<double, y_size, dim> C;
-        matrix::Matrix<double, y_size, u_size> D;
-        matrix::SquareMatrix<double, dim> G;
-        matrix::Matrix<double, y_size, dim> H;
+        FastMath::SquareMatrix<double, dim> A;
+        FastMath::Matrix<double, dim, u_size> B;
+        FastMath::Matrix<double, y_size, dim> C;
+        FastMath::Matrix<double, y_size, u_size> D;
+        FastMath::SquareMatrix<double, dim> G;
+        FastMath::Matrix<double, y_size, dim> H;
 
         // covariance matrix
-        matrix::SquareMatrix<double, dim> Q;
-        matrix::SquareMatrix<double, y_size> R;
-        matrix::Matrix<double, dim, y_size> N;
-        matrix::SquareMatrix<double, dim> P;        // covariance of x
+        FastMath::SquareMatrix<double, dim> Q;
+        FastMath::SquareMatrix<double, y_size> R;
+        FastMath::Matrix<double, dim, y_size> N;
+        FastMath::SquareMatrix<double, dim> P;        // covariance of x
 
         State<dim> x_next;
-        matrix::SquareMatrix<double, dim> P_next;
+        FastMath::SquareMatrix<double, dim> P_next;
 
         // middle process
-        matrix::Matrix<double, dim, y_size> L;  // kalman gain
+        FastMath::Matrix<double, dim, y_size> L;  // kalman gain
 
 
         void cleanAll()
@@ -82,12 +81,12 @@ namespace ACSP::Controller
         {
             cleanAll();
         }
-        KalmanFilter(const matrix::Matrix<double, dim, dim>& A,
-                     const matrix::Matrix<double, dim, u_size> B,
-                     const matrix::Matrix<double, y_size, dim> C,
-                     const matrix::Matrix<double, y_size, u_size> D,
-                     const matrix::Matrix<double, dim, dim> G,
-                     const  matrix::Matrix<double, y_size, dim> H)
+        KalmanFilter(const FastMath::Matrix<double, dim, dim>& A,
+                     const FastMath::Matrix<double, dim, u_size> B,
+                     const FastMath::Matrix<double, y_size, dim> C,
+                     const FastMath::Matrix<double, y_size, u_size> D,
+                     const FastMath::Matrix<double, dim, dim> G,
+                     const  FastMath::Matrix<double, y_size, dim> H)
         {
             cleanAll();
             this->A = A;
@@ -106,10 +105,10 @@ namespace ACSP::Controller
             N.setZero();
         };
 
-        void init(const matrix::Matrix<double, dim, dim> Q_,
-                  const matrix::Matrix<double, y_size, y_size> R_,
-                  const matrix::Matrix<double, dim, y_size> N_,
-                  const matrix::SquareMatrix<double, dim> P_)
+        void init(const FastMath::Matrix<double, dim, dim> Q_,
+                  const FastMath::Matrix<double, y_size, y_size> R_,
+                  const FastMath::Matrix<double, dim, y_size> N_,
+                  const FastMath::SquareMatrix<double, dim> P_)
         {
             this->Q = Q_;
             this->R = R_;
@@ -154,23 +153,23 @@ namespace ACSP::Controller
         {
             //ref : https://ww2.mathworks.cn/help/control/ref/kalmanfilter.html#mw_d8e95692-cc3f-4419-abe4-d98a9ca226e1
             // Algorithms -> Discrete-Time Estimation
-            matrix::SquareMatrix<double, dim> Q_ = G*Q*(G.T());
-            matrix::SquareMatrix<double, y_size> R_ = R + H*N + N.T()*H.T() + H*Q*H.T();
-            matrix::Matrix<double, dim, y_size> N_ = G*(Q*H.T() + N);
+            FastMath::SquareMatrix<double, dim> Q_ = G*Q*(G.T());
+            FastMath::SquareMatrix<double, y_size> R_ = R + H*N + N.T()*H.T() + H*Q*H.T();
+            FastMath::Matrix<double, dim, y_size> N_ = G*(Q*H.T() + N);
 
-            matrix::SquareMatrix<double, y_size> CPCR = C*P*C.T() + R_;
-            matrix::SquareMatrix<double, y_size> CPCR_inv = inv(CPCR);
+            FastMath::SquareMatrix<double, y_size> CPCR = C*P*C.T() + R_;
+            FastMath::SquareMatrix<double, y_size> CPCR_inv = CPCR.inv();
             L = (A*P*C.T() + N_)*CPCR_inv;    //kalman gain calc
 
             x_next = A*x + B*u + L*(y-C*x - D*u);  // state update
 
-            matrix::Matrix<double, dim, y_size> M = P*C.T()*CPCR_inv;
+            FastMath::Matrix<double, dim, y_size> M = P*C.T()*CPCR_inv;
 
-            matrix::SquareMatrix<double, dim> IMC =  matrix::eye<double, dim>() - M*C;
-            matrix::SquareMatrix<double, dim> Z = IMC*P*IMC.T() + M*R_*M.T();
+            FastMath::SquareMatrix<double, dim> IMC =  FastMath::SquareMatrix<double, dim>().Identity() - M*C;
+            FastMath::SquareMatrix<double, dim> Z = IMC*P*IMC.T() + M*R_*M.T();
 
-            matrix::SquareMatrix<double, y_size> R_inv =  inv(R_);
-            matrix::SquareMatrix<double, dim> ANRC = A-N_*R_inv*C;
+            FastMath::SquareMatrix<double, y_size> R_inv =  R_.inv();
+            FastMath::SquareMatrix<double, dim> ANRC = A-N_*R_inv*C;
             P_next = ANRC * Z * ANRC.T() + Q_ - N*R_inv*N.T();
 
             x = x_next;

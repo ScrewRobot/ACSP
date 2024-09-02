@@ -33,7 +33,7 @@ endif()
 
 if(${ENABLE_DEVELOPMENT})
     add_executable(develop devlop.cpp)
-    target_include_directories(develop PUBLIC src)
+    target_include_directories(develop PUBLIC src FastMath)
 endif()
 
 if (${ENABLE_EXAMPLE})
@@ -42,7 +42,7 @@ if (${ENABLE_EXAMPLE})
     foreach(item IN LISTS EXAMPLE_SRC)
         get_filename_component(SRCNAME ${item} NAME_WE) #得到文件的名字，不带扩展名
         add_executable(${SRCNAME} ${item})
-        target_include_directories(${SRCNAME} PUBLIC ${PROJECT_TOP_DIR}/src)
+        target_include_directories(${SRCNAME} PUBLIC  ${PROJECT_TOP_DIR}/src ${PROJECT_TOP_DIR}/FastMath)
         install(TARGETS ${SRCNAME} DESTINATION ${TEST_INSTALL_DIR})
         message(STATUS "Example : ${SRCNAME} <- ${item}")
 

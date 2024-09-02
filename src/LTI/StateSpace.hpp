@@ -267,8 +267,8 @@ namespace ACSP::LTI
             }break;
             case C2D_TYPE::ZOH:     // C2D_TYPE::ZOH
             {
-                Ad = matrix::expm(A * T);
-                auto Ad_ = matrix::expm(A * (0.5*T));
+                Ad = (A * T).expm();
+                auto Ad_ = (A * (0.5*T)).expm();
                 Bd = (Ad + 4.0*Ad_ + I)*B*(T/6.0);      // 辛普森法
                 Cd = C;
                 Dd = D;

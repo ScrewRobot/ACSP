@@ -3,8 +3,7 @@
 #include "ACSP.hpp"
 
 TEST_CASE("SISO test: filter 1") {
-    using namespace ACSP::math;
-    using namespace ACSP::Controller;
+    using namespace FastMath;
     using namespace ACSP::LTI;
     //              2 s + 1
     //  -----------------------------

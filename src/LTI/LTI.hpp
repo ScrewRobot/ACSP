@@ -1,7 +1,7 @@
 #ifndef ACSP_LTI_HPP
 #define ACSP_LTI_HPP
 
-#include "math/math.hpp"
+#include "FastMath.hpp"
 #include "LTI/ODEsolver.hpp"
 #include "LTI/StateSpace.hpp"
 #include "LTI/SISO.hpp"
