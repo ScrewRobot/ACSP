@@ -1,7 +1,7 @@
 #include "doctest/doctest.h"
 #include <iostream>
 #include "ACSP.hpp"
-using namespace ACSP::math;
+using namespace FastMath;
 using namespace ACSP::LTI;
 using namespace ACSP::Controller;
 
@@ -316,6 +316,7 @@ TEST_CASE("LADRC2 Test : reset during run")
 
 TEST_CASE(" ControllabilityMatrix and  test")
 {
+	using namespace FastMath;
     SquareMatrix<double, 3> A({0, 1, 3,
                                -10, -2, 3,
                                1, 2, 3});

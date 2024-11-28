@@ -1,14 +1,13 @@
 #ifndef ACSP_ADRC_HPP
 #define ACSP_ADRC_HPP
 
-#include "math/math.hpp"
+#include "FastMath.hpp"
 #include "LTI/LTI.hpp"
 #include <array>
 
 namespace ACSP::Controller
 {
     namespace LTI = ACSP::LTI;
-    namespace matrix = ACSP::math;
 
     class LADRC2
     {

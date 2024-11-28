@@ -1,14 +1,13 @@
 #ifndef ACSP_TRACKINGDIFFERENTIAL_HPP
 #define ACSP_TRACKINGDIFFERENTIAL_HPP
 
-#include "math/math.hpp"
+#include "FastMath.hpp"
 #include "LTI/LTI.hpp"
 #include <array>
 namespace ACSP::Controller
 {
 
     namespace LTI = ACSP::LTI;
-    namespace matrix = ACSP::math;
 
     namespace details
     {
@@ -29,7 +28,7 @@ namespace ACSP::Controller
     }
 
 
-    template <size_t N, typename = std::enable_if_t<matrix::is_greater_or_equal<N, 3>::value>>
+    template <size_t N, typename = std::enable_if_t<FastMath::is_greater_or_equal<N, 3>::value>>
     class LTD_MultiplePoles : public LTI::StateSpace<N, 1, 3>
     {
     public:
@@ -38,12 +37,12 @@ namespace ACSP::Controller
 
         void setCutOffFreq(double Hz)
         {
-            double wc = 2 * ACSP::math::M_PI_PRECISE * Hz;
+            double wc = 2 * FastMath::M_PI_PRECISE * Hz;
             double w = wc / sqrt(pow(2, 1.0/N) - 1);
 
-            matrix::SquareMatrix<double, N> A;
-            matrix::Matrix<double, N, 1> B;
-            matrix::Matrix<double, 3, N> C;
+            FastMath::SquareMatrix<double, N> A;
+            FastMath::Matrix<double, N, 1> B;
+            FastMath::Matrix<double, 3, N> C;
 
             A.setZero();
             for (size_t k = 0; k<N-1; ++k)
@@ -72,6 +71,12 @@ namespace ACSP::Controller
             this->x(1) = dx;
             this->x(2) = ddx;
 
+        }
+
+        void update(double u, double dt=1E-3)
+        {
+            this->u(0) = u;
+            this->step(dt);
         }
 
 

@@ -1,11 +1,11 @@
 #ifndef ACSP_ODESOLVER_HPP
 #define ACSP_ODESOLVER_HPP
 
-#include "math/math.hpp"
+#include "FastMath.hpp"
 
 namespace ACSP::LTI
 {
-    namespace matrix = ACSP::math;
+    namespace matrix = FastMath;
 
     template <size_t N>
     using State = matrix::Vector<double, N>;

@@ -24,6 +24,7 @@ set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/bin)
 
 option(ENABLE_UNIT_TESTS "Enable unit tests" ON)
 option(ENABLE_DEVELOPMENT "Enable development" ON)
+option(ENABLE_EXAMPLE "Enable example" ON)
 
 if(${ENABLE_UNIT_TESTS})
     add_definitions(-DENABLE_UNIT_TESTS)
@@ -32,7 +33,21 @@ endif()
 
 if(${ENABLE_DEVELOPMENT})
     add_executable(develop devlop.cpp)
-    target_include_directories(develop PUBLIC src)
+    target_include_directories(develop PUBLIC src FastMath)
 endif()
 
+if (${ENABLE_EXAMPLE})
+    SET(TEST_INSTALL_DIR ${PROJECT_TOP_DIR}/bin/examples)
+    FILE(GLOB EXAMPLE_SRC "${PROJECT_SOURCE_DIR}/examples/*.cpp")
+    foreach(item IN LISTS EXAMPLE_SRC)
+        get_filename_component(SRCNAME ${item} NAME_WE) #得到文件的名字，不带扩展名
+        add_executable(${SRCNAME} ${item})
+        target_include_directories(${SRCNAME} PUBLIC  ${PROJECT_TOP_DIR}/src ${PROJECT_TOP_DIR}/FastMath)
+        install(TARGETS ${SRCNAME} DESTINATION ${TEST_INSTALL_DIR})
+        message(STATUS "Example : ${SRCNAME} <- ${item}")
+
+    endforeach ()
+
+
+endif ()
 

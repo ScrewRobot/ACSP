@@ -3,11 +3,11 @@
 #include "ACSP.hpp"
 #include <cmath>
 #include<limits>
-using namespace ACSP::math;
+using namespace FastMath;
 
 
 TEST_CASE("matrix product test") {
-    using namespace ACSP::math;
+    using namespace FastMath;
     Matrix<double, 3, 4> A;
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -32,7 +32,7 @@ TEST_CASE("matrix product test") {
 }
 
 TEST_CASE("matrix slice test") {
-    using namespace ACSP::math;
+    using namespace FastMath;
     Matrix<double, 3, 4> A;
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -47,7 +47,7 @@ TEST_CASE("matrix slice test") {
 }
 
 TEST_CASE("matrix inv test") {
-    using namespace ACSP::math;
+    using namespace FastMath;
     double data[] = {7,2,3,4,5,6,7,8,9};
     SquareMatrix<double, 3> A(data);
 
@@ -57,15 +57,15 @@ TEST_CASE("matrix inv test") {
     SquareMatrix<double, 3> A_inv(data_);
 
 
-    CHECK(isEqual(inv(A), A_inv, 1e-8));
-    auto I = eye<double, 3>();
-    auto iden = A* inv(A);
-    CHECK(isEqual(iden, I));
+    CHECK((A.inv() - A_inv).norm() < 1E-8);
+    auto I = SquareMatrix<double, 3>::Identity();
+    auto iden = A* A.inv();
+    CHECK(iden == I);
 }
 
 TEST_CASE("matrix expm test") {
 
-    using namespace ACSP::math;
+    using namespace FastMath;
     SquareMatrix<double, 3> A;
     double theta = 1;
     double v[3] = {0,0,theta};
@@ -80,7 +80,7 @@ TEST_CASE("matrix expm test") {
     A(2, 1) = v[0];
     A(2, 2) = 0;
 
-    auto res = expm(A);
+    auto res = A.expm();
 
     CHECK(res(0,0) == doctest::Approx(cos(theta)).epsilon(1E-12));
     CHECK(res(0,1) == doctest::Approx(-sin(theta)).epsilon(1E-12));
@@ -92,7 +92,8 @@ TEST_CASE("matrix expm test") {
 
 TEST_CASE("pinv test 1") {
     Matrix<double, 3, 4> A({1,2,3,4,5,6,7,8,9,10,11,12});
-    auto A_pinv = pinv(A);
+    Matrix<double, 4, 3> A_pinv;
+    A.pinv(A_pinv);
 
     auto check_1 = A* A_pinv * A;
     CHECK(A == check_1);
@@ -111,7 +112,7 @@ TEST_CASE("pinv test 1") {
 
 TEST_CASE("pinv test 2") {
     Matrix<double, 4, 3> A({1,2,3,4,5,6,7,8,9,10,11,12});
-    auto A_pinv = pinv(A);
+    auto A_pinv = A.pinv();
 
     auto check_1 = A* A_pinv * A;
     CHECK(A == check_1);
@@ -131,7 +132,7 @@ TEST_CASE("pinv test 2") {
 TEST_CASE("pinv test 3") {
     SquareMatrix<double, 4> A({1,2,3,4,2,3,4,1,3,4,1,2,4,1,2,3});
 
-    CHECK(pinv(A) == inv(A));
+    CHECK(A.pinv() == A.inv());
 
 
 }

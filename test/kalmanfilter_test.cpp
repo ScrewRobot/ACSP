@@ -2,32 +2,33 @@
 #include <iostream>
 #include "ACSP.hpp"
 
-using namespace ACSP::math;
+using namespace FastMath;
 using namespace ACSP::LTI;
 using namespace ACSP::Controller;
 
 
 TEST_CASE("Kalman Filter Test : feedback control") {
+    using namespace FastMath;
     constexpr int dim = 2;
     constexpr int out_dim = 1;
 
-    Matrix<double, dim, dim> A({1.0, 0.0010, -0.0010, 0.9900});
-    Matrix<double, dim, out_dim> B({0.0, 0.0995});
-    Matrix<double, out_dim, dim> C({1.0, 0.0});
-    Matrix<double, out_dim, out_dim> D({0.0});
-    SquareMatrix<double, dim> G;
+    FastMath::Matrix<double, dim, dim> A({1.0, 0.0010, -0.0010, 0.9900});
+    FastMath::Matrix<double, dim, out_dim> B({0.0, 0.0995});
+    FastMath::Matrix<double, out_dim, dim> C({1.0, 0.0});
+    FastMath::Matrix<double, out_dim, out_dim> D({0.0});
+    FastMath::SquareMatrix<double, dim> G;
     G.setIdentity();
-    Matrix<double, out_dim, dim> H;
+    FastMath::Matrix<double, out_dim, dim> H;
     H.setZero();
 
     KalmanFilter kalman(A, B, C, D, G, H);
 
-    SquareMatrix<double, dim> Q;
-    SquareMatrix<double, out_dim> R;
-    Matrix<double, dim, out_dim> N;
-    SquareMatrix<double, dim> P;
+    FastMath::SquareMatrix<double, dim> Q;
+    FastMath::SquareMatrix<double, out_dim> R;
+    FastMath::Matrix<double, dim, out_dim> N;
+    FastMath::SquareMatrix<double, dim> P;
 
-    Q = eye<double, dim>() * 0.05;
+    Q = FastMath::SquareMatrix<double, dim>::Identity() * 0.05;
     R(0, 0) = 1;
     N.setZero();
     P.setIdentity();
@@ -45,7 +46,7 @@ TEST_CASE("Kalman Filter Test : feedback control") {
 
     double t = 0;
 
-    Vector<double, 1> u;
+    FastMath::Vector<double, 1> u;
     auto x = kalman.getState();
 
     while (t < 10) {

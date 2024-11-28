@@ -259,7 +259,7 @@ namespace ACSP::LTI
             case C2D_TYPE::Tustin:  // C2D_TYPE::Tustin
             {
                 matrix::SquareMatrix<double, N> Ad_ = I - A*(T/2);
-                auto Ad_inv = inv(Ad_);
+                auto Ad_inv = Ad_.inv();
                 Ad = (I + A*(T/2))*Ad_inv;
                 Bd = (Ad + I)*B*(T/2);
                 Cd = C*Ad_inv;
@@ -267,8 +267,8 @@ namespace ACSP::LTI
             }break;
             case C2D_TYPE::ZOH:     // C2D_TYPE::ZOH
             {
-                Ad = matrix::expm(A * T);
-                auto Ad_ = matrix::expm(A * (0.5*T));
+                Ad = (A * T).expm();
+                auto Ad_ = (A * (0.5*T)).expm();
                 Bd = (Ad + 4.0*Ad_ + I)*B*(T/6.0);      // 辛普森法
                 Cd = C;
                 Dd = D;

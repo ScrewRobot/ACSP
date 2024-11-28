@@ -1,18 +1,32 @@
-#ifndef ACSP_QUADPROG_HPP
-#define ACSP_QUADPROG_HPP
+/******************************************************************************
+  文 件 名   : quadprog.hpp
+  作    者   : Barry
+  生成日期   : 2024-08-16
+  最近修改   :
+  功能描述   : QP求解
+  函数列表   :
+  修改历史   :
+  1.日    期   : 2024-08-16
+    作    者   : Barry
+    修改内容   : 创建文件
+******************************************************************************/
 
-#include "math/math.hpp"
+#ifndef FASTMATH_QUADPROG_HPP
+#define FASTMATH_QUADPROG_HPP
+
 #include <sstream>
 #include <string>
-//#define TRACE_SOLVER
+#include <iostream>
+#include "FastMath.hpp"
 
-namespace ACSP::math
+namespace FastMath::Algorithm
 {
+
     namespace QuadProg_details
     {
 
         template <size_t N, size_t M>
-        void print_matrix(const char* name, const Matrix<double, M, N>& A, int n=-1, int m=-1)
+        void print_matrix(const char* name, const FastMath::Matrix<double, M, N>& A, int n=-1, int m=-1)
         {
 
             std::cout << name << " : \n" << A << std::endl;
@@ -26,7 +40,7 @@ namespace ACSP::math
 
 
         template <size_t N>
-        inline void compute_d(Vector<double, N>& d, const SquareMatrix<double, N>& J, const Vector<double, N>& np)
+        inline void compute_d(FastMath::Vector<double, N>& d, const FastMath::SquareMatrix<double, N>& J, const FastMath::Vector<double, N>& np)
         {
             int i, j, n = N;
             double sum;
@@ -42,7 +56,7 @@ namespace ACSP::math
         }
 
         template <size_t N>
-        inline void update_z(Vector<double, N>& z, const SquareMatrix<double, N>& J, const Vector<double, N>& d, int iq)
+        inline void update_z(FastMath::Vector<double, N>& z, const FastMath::SquareMatrix<double, N>& J, const FastMath::Vector<double, N>& d, int iq)
         {
             int i, j, n = N;
 
@@ -56,7 +70,7 @@ namespace ACSP::math
         }
 
         template <size_t N, size_t mp>
-        inline void update_r(const SquareMatrix<double, N>& R, Vector<double, mp>& r, const Vector<double, N>& d, int iq)
+        inline void update_r(const FastMath::SquareMatrix<double, N>& R, FastMath::Vector<double, mp>& r, const FastMath::Vector<double, N>& d, int iq)
         {
             int i, j;
             double sum;
@@ -73,7 +87,7 @@ namespace ACSP::math
 
 
         template <size_t N>
-        inline double scalar_product(const Vector<double, N>& x, const Vector<double, N>& y)
+        inline double scalar_product(const FastMath::Vector<double, N>& x, const FastMath::Vector<double, N>& y)
         {
             int i, n = N;
             double sum;
@@ -92,25 +106,25 @@ namespace ACSP::math
             if (a1 > b1)
             {
                 t = (b1 / a1);
-                return a1 * sqrt(1.0 + t * t);
+                return a1 * std::sqrt(1.0 + t * t);
             }
             else
             if (b1 > a1)
             {
                 t = (a1 / b1);
-                return b1 * sqrt(1.0 + t * t);
+                return b1 * std::sqrt(1.0 + t * t);
             }
-            return a1 * sqrt(2.0);
+            return a1 * std::sqrt(2.0);
         }
 
 
         template <size_t N>
-        bool add_constraint(SquareMatrix<double, N>& R, SquareMatrix<double, N>& J, Vector<double, N>& d, unsigned int& iq, double& R_norm)
+        bool add_constraint(FastMath::SquareMatrix<double, N>& R, FastMath::SquareMatrix<double, N>& J, FastMath::Vector<double, N>& d, unsigned int& iq, double& R_norm)
         {
             unsigned int n = N;
-    #ifdef TRACE_SOLVER
-                std::cout << "Add constraint " << iq << '/';
-    #endif
+#ifdef TRACE_SOLVER
+            std::cout << "Add constraint " << iq << '/';
+#endif
             unsigned int i, j, k;
             double cc, ss, h, t1, t2, xny;
 
@@ -180,7 +194,7 @@ namespace ACSP::math
 
 
         template <size_t N, size_t mp>
-        void delete_constraint(SquareMatrix<double, N>& R, SquareMatrix<double, N>& J, Vector<int, mp>& A, Vector<double, mp>& u, unsigned int n, int p, unsigned int& iq, int l)
+        void delete_constraint(FastMath::SquareMatrix<double, N>& R, FastMath::SquareMatrix<double, N>& J, Vector<int, mp>& A, FastMath::Vector<double, mp>& u, unsigned int n, int p, unsigned int& iq, int l)
         {
 #ifdef TRACE_SOLVER
             std::cout << "Delete constraint " << l << ' ' << iq;
@@ -267,7 +281,7 @@ namespace ACSP::math
 
 
         template <size_t N>
-        inline void forward_elimination(const SquareMatrix<double, N>& L, Vector<double, N>& y, const Vector<double, N>& b)
+        inline void forward_elimination(const FastMath::SquareMatrix<double, N>& L, FastMath::Vector<double, N>& y, const FastMath::Vector<double, N>& b)
         {
             int i, j, n = N;
 
@@ -282,7 +296,7 @@ namespace ACSP::math
         }
 
         template <size_t N>
-        inline void backward_elimination(const SquareMatrix<double, N>& U, Vector<double, N>& x, const Vector<double, N>& y)
+        inline void backward_elimination(const FastMath::SquareMatrix<double, N>& U, FastMath::Vector<double, N>& x, const FastMath::Vector<double, N>& y)
         {
             int i, j, n = N;
 
@@ -298,7 +312,7 @@ namespace ACSP::math
 
 
         template <size_t N>
-        void cholesky_decomposition(SquareMatrix<double, N>& A)
+        void cholesky_decomposition(FastMath::SquareMatrix<double, N>& A)
         {
             int i, j, k, n = N;
             double sum;
@@ -321,7 +335,7 @@ namespace ACSP::math
                             throw std::logic_error(os.str());
                             exit(-1);
                         }
-                        A(i,i) = sqrt(sum);
+                        A(i,i) = std::sqrt(sum);
                     }
                     else
                         A(j,i) = sum / A(i,i);
@@ -332,10 +346,10 @@ namespace ACSP::math
         }
 
         template <size_t N>
-        void cholesky_solve(const SquareMatrix<double, N>& L, Vector<double, N>& x, const Vector<double, N>& b)
+        void cholesky_solve(const FastMath::SquareMatrix<double, N>& L, FastMath::Vector<double, N>& x, const FastMath::Vector<double, N>& b)
         {
             int n = N;
-            Vector<double, N> y;
+            FastMath::Vector<double, N> y;
 
             /* Solve L * y = b */
             forward_elimination(L, y, b);
@@ -348,25 +362,25 @@ namespace ACSP::math
 
 
         template <size_t nG, size_t nCE, size_t nCI>
-        double solve_quadprog(SquareMatrix<double, nG> &G, Vector<double, nG> &g0,
-                              const Matrix<double, nG, nCE> &CE, const Vector<double, nCE> &ce0,
-                              const Matrix<double, nG, nCI> &CI, const Vector<double, nCI> &ci0,
-                              Vector<double, nG> &x)
+        double solve_quadprog(SquareMatrix<double, nG> &G, FastMath::Vector<double, nG> &g0,
+                              const FastMath::Matrix<double, nG, nCE> &CE, const FastMath::Vector<double, nCE> &ce0,
+                              const FastMath::Matrix<double, nG, nCI> &CI, const FastMath::Vector<double, nCI> &ci0,
+                              FastMath::Vector<double, nG> &x)
         {
             std::ostringstream msg;
             constexpr unsigned int n = nG, p = nCE, m = nCI;
             unsigned int i, j, k, l; /* indices */
             int ip; // this is the index of the constraint to be added to the active set
             SquareMatrix<double, n> R, J;
-            Vector<double, n> z, d, np, x_old;
-            Vector<double, m+p> s, r, u, u_old;
+            FastMath::Vector<double, n> z, d, np, x_old;
+            FastMath::Vector<double, m+p> s, r, u, u_old;
             double f_value, psi, c1, c2, sum, ss, R_norm;
             double inf;
             if (std::numeric_limits<double>::has_infinity)
                 inf = std::numeric_limits<double>::infinity();
             else
                 inf = 1.0E300;
-            double t, t1, t2; /* t is the step lenght, which is the minimum of the partial step length t1 
+            double t, t1, t2; /* t is the step lenght, which is the minimum of the partial step length t1
     * and the full step length t2 */
             Vector<int, m+p> A, A_old, iai;
             unsigned int iq, iter = 0;
@@ -425,8 +439,8 @@ namespace ACSP::math
 
             /* c1 * c2 is an estimate for cond(G) */
 
-            /* 
-              * Find the unconstrained minimizer of the quadratic form 0.5 * x G x + g0 x 
+            /*
+              * Find the unconstrained minimizer of the quadratic form 0.5 * x G x + g0 x
              * this is a feasible point in the dual space
              * x = G^-1 * g0
              */
@@ -456,7 +470,7 @@ namespace ACSP::math
     print_vector("d", d);
 #endif
 
-                /* compute full step length t2: i.e., the minimum step in primal space s.t. the contraint 
+                /* compute full step length t2: i.e., the minimum step in primal space s.t. the contraint
                   becomes feasible */
                 t2 = 0.0;
                 if (fabs(scalar_product(z, z)) > std::numeric_limits<double>::epsilon()) // i.e. z != 0
@@ -626,7 +640,7 @@ namespace ACSP::math
                 iai(l) = l;
                 delete_constraint(R, J, A, u, n, p, iq, l);
 #ifdef TRACE_SOLVER
-                std::cout << " in dual space: " 
+                std::cout << " in dual space: "
       << f_value << std::endl;
     print_vector("x", x);
     print_vector("z", z);
@@ -647,7 +661,7 @@ namespace ACSP::math
                 u(k) -= t * r(k);
             u(iq) += t;
 #ifdef TRACE_SOLVER
-            std::cout << " in both spaces: " 
+            std::cout << " in both spaces: "
     << f_value << std::endl;
   print_vector("x", x);
   print_vector("u", u, iq + 1);
@@ -723,23 +737,67 @@ namespace ACSP::math
 
     // value = quadprog(H,f,A,b,Aeq,beq, x)
 
-    template <size_t N, size_t nCE, size_t nCI>
-    double quadprog(SquareMatrix<double, N> &H, Vector<double, N> &f,
-                          const Matrix<double, nCI, N> &A, const Vector<double, nCI> &b,
-                          const Matrix<double, nCE, N> &Aeq, const Vector<double, nCE> &beq,
-                          Vector<double, N> &x)
+    /*
+     *
+     * The problem is in the form:
+
+        min 0.5 * x H x + f^T x
+        s.t.
+            A x <= b
+            Aeq x == beq
+     * */
+
+    /***
+     * QP标准形式求解
+     *  min 0.5 * x H x + f^T x
+     *  s.t.
+     *      A x <= b
+     *      Aeq x == beq
+     *
+     * @tparam N    自变量x维度
+     * @tparam nCI  不等式约束个数
+     * @tparam nCE  等式约束个数
+     * @param H     目标函数，要求正定
+     * @param f     目标函数
+     * @param A     不等式约束   Ax <= b
+     * @param b     不等式约束   Ax <= b
+     * @param Aeq   等式约束    Aeq x == beq
+     * @param beq   等式约束    Aeq x == beq
+     * @param x     优化变量
+     * @return      返回优化后的目标函数值
+     */
+
+
+    template <size_t N, size_t nCI, size_t nCE>
+    inline double quadprog(FastMath::SquareMatrix<double, N> &H, FastMath::Vector<double, N> &f,
+                    const FastMath::Matrix<double, nCI, N> &A, const FastMath::Vector<double, nCI> &b,
+                    const FastMath::Matrix<double, nCE, N> &Aeq, const FastMath::Vector<double, nCE> &beq,
+                    FastMath::Vector<double, N> &x)
     {
 
-        SquareMatrix<double, N> G = H;
-        Vector<double, N> g0 = f;
+        FastMath::SquareMatrix<double, N> G = H;
+        FastMath::Vector<double, N> g0 = f;
         auto CE = -Aeq.T();
         auto CI = -A.T();
         return QuadProg_details::solve_quadprog(G, g0, CE, beq, CI, b, x);
     }
 
+    template <size_t N, size_t nCI>
+    double quadprog(FastMath::SquareMatrix<double, N> &H, FastMath::Vector<double, N> &f,
+                    const FastMath::Matrix<double, nCI, N> &A, const FastMath::Vector<double, nCI> &b,
+                    FastMath::Vector<double, N> &x)
+    {
+
+        FastMath::SquareMatrix<double, N> G = H;
+        FastMath::Vector<double, N> g0 = f;
+        const FastMath::Matrix<double, 0, N> Aeq;
+        const FastMath::Vector<double, 0> beq;
+        auto CE = -Aeq.T();
+        auto CI = -A.T();
+        return QuadProg_details::solve_quadprog(G, g0, CE, beq, CI, b, x);
+    }
 
 }
 
 
-
-#endif //ACSP_QUADPROG_HPP
+#endif //FASTMATH_QUADPROG_HPP
