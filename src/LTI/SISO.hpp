@@ -1,7 +1,7 @@
 #ifndef ACSP_SISO_HPP
 #define ACSP_SISO_HPP
 
-#include "math/math.hpp"
+#include "FastMath.hpp"
 #include "ODEsolver.hpp"
 #include "StateSpace.hpp"
 #include <type_traits>

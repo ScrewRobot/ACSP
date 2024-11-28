@@ -259,7 +259,7 @@ namespace ACSP::LTI
             case C2D_TYPE::Tustin:  // C2D_TYPE::Tustin
             {
                 matrix::SquareMatrix<double, N> Ad_ = I - A*(T/2);
-                auto Ad_inv = inv(Ad_);
+                auto Ad_inv = Ad_.inv();
                 Ad = (I + A*(T/2))*Ad_inv;
                 Bd = (Ad + I)*B*(T/2);
                 Cd = C*Ad_inv;

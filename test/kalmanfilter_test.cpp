@@ -2,7 +2,7 @@
 #include <iostream>
 #include "ACSP.hpp"
 
-using namespace ACSP::math;
+using namespace FastMath;
 using namespace ACSP::LTI;
 using namespace ACSP::Controller;
 

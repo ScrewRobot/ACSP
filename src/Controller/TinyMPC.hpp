@@ -257,10 +257,10 @@ namespace ACSP::Controller
             if (solver->work->iter % solver->settings->check_termination == 0)
             {
 
-                solver->work->primal_residual_state = MaxAbs(solver->work->x-solver->work->vnew);
-                solver->work->dual_residual_state = MaxAbs(solver->work->v-solver->work->vnew) * solver->cache->rho;
-                solver->work->primal_residual_input = MaxAbs(solver->work->u-solver->work->znew);
-                solver->work->dual_residual_input = (MaxAbs(solver->work->z - solver->work->znew)) * solver->cache->rho;
+                solver->work->primal_residual_state = (solver->work->x-solver->work->vnew).abs().max();
+                solver->work->dual_residual_state = (solver->work->v-solver->work->vnew).abs().max() * solver->cache->rho;
+                solver->work->primal_residual_input = (solver->work->u-solver->work->znew).abs().max();
+                solver->work->dual_residual_input = ((solver->work->z - solver->work->znew)).abs().max() * solver->cache->rho;
 
                 if (solver->work->primal_residual_state < solver->settings->abs_pri_tol &&
                     solver->work->primal_residual_input < solver->settings->abs_pri_tol &&
@@ -390,10 +390,10 @@ namespace ACSP::Controller
 
             for (int i = 0; i < 1000; i++)
             {
-                Kinf = inv(R1 + Bdyn.transpose() * Ptp1 * Bdyn) * Bdyn.transpose() * Ptp1 * Adyn;
+                Kinf = (R1 + Bdyn.transpose() * Ptp1 * Bdyn).inv() * Bdyn.transpose() * Ptp1 * Adyn;
                 Pinf = Q1 + Adyn.transpose() * Ptp1 * (Adyn - Bdyn * Kinf);
                 // if Kinf converges, break
-                if (MaxAbs(Kinf - Ktp1) < 1e-5)
+                if ((Kinf - Ktp1).abs().max() < 1e-5)
                 {
                     if (verbose) {
                         std::cout << "Kinf converged after " << i + 1 << " iterations" << std::endl;
@@ -405,7 +405,7 @@ namespace ACSP::Controller
             }
 
             // Compute cached matrices
-            SquareMatrix<tinytype, nu> Quu_inv = inv(R1 + Bdyn.transpose() * Pinf * Bdyn);
+            SquareMatrix<tinytype, nu> Quu_inv = (R1 + Bdyn.transpose() * Pinf * Bdyn).inv();
             SquareMatrix<tinytype, nx> AmBKt = (Adyn - Bdyn * Kinf).transpose();
 
             if (verbose) {

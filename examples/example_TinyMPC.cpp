@@ -3,7 +3,7 @@
 #include <algorithm>
 #include "ACSP.hpp"
 
-using namespace ACSP::math;
+using namespace FastMath;
 using namespace ACSP::Controller;
 using namespace ACSP::LTI;
 
@@ -390,17 +390,17 @@ tinytype Xref_data[NTOTAL * NSTATES] = {
         0.0000000, 3.9866667, 1.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.2666667, 0.0000000, 0.0000000, 0.0000000, 0.0000000,
         0.0000000, 4.0000000, 1.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000};
 
-typedef Matrix<tinytype, NINPUTS, NHORIZON-1> tiny_MatrixNuNhm1;
-typedef Matrix<tinytype, NSTATES, NHORIZON> tiny_MatrixNxNh;
-typedef Matrix<tinytype, NSTATES, 1> tiny_VectorNx;
+typedef FastMath::Matrix<tinytype, NINPUTS, NHORIZON-1> tiny_MatrixNuNhm1;
+typedef FastMath::Matrix<tinytype, NSTATES, NHORIZON> tiny_MatrixNxNh;
+typedef FastMath::Matrix<tinytype, NSTATES, 1> tiny_VectorNx;
 using MPC = TinyMPC<NSTATES, NINPUTS, NHORIZON>;
 
 int main() {
     MPC::TinySolver *solver;
-    SquareMatrix<double, NSTATES> Adyn{Adyn_data};
-    Matrix<double, NSTATES, NINPUTS> Bdyn(Bdyn_data);
-    Vector<double, NSTATES> Q(Q_data);
-    Vector<double, NINPUTS> R(R_data);
+    FastMath::SquareMatrix<double, NSTATES> Adyn{Adyn_data};
+    FastMath::Matrix<double, NSTATES, NINPUTS> Bdyn(Bdyn_data);
+    FastMath::Vector<double, NSTATES> Q(Q_data);
+    FastMath::Vector<double, NINPUTS> R(R_data);
 
     tiny_MatrixNxNh x_min;
     x_min.setAll(-5);
@@ -424,9 +424,9 @@ int main() {
     MPC::TinyWorkspace *work = solver->work;
 
     // Map data from trajectory_data
-    Matrix<tinytype, NTOTAL, NSTATES> Xref_total_t(Xref_data);
+    FastMath::Matrix<tinytype, NTOTAL, NSTATES> Xref_total_t(Xref_data);
 
-    Matrix<tinytype, NSTATES, NTOTAL> Xref_total = Xref_total_t.transpose();
+    FastMath::Matrix<tinytype, NSTATES, NTOTAL> Xref_total = Xref_total_t.transpose();
     work->Xref = Xref_total.slice<NSTATES, NHORIZON>(0,0);
 
     // Initial state
@@ -438,7 +438,7 @@ int main() {
 //        std::cout << "------------------iter : " << k << "------------------" << std::endl;
 
 
-        Vector<tinytype, NSTATES> err = x0 - work->Xref.col(1);
+        FastMath::Vector<tinytype, NSTATES> err = x0 - work->Xref.col(1);
         std::cout << "tracking error: " << err.norm() << std::endl;
 
         // 1. Update measurement
@@ -455,7 +455,7 @@ int main() {
         MPC::tiny_solve(solver);
 
         // 5. Simulate forward
-        Vector<tinytype, NINPUTS> u_col = work->u.col(0);
+        FastMath::Vector<tinytype, NINPUTS> u_col = work->u.col(0);
         x0 = work->Adyn * x0 + work->Bdyn * u_col;
     }
 

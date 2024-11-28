@@ -8,7 +8,6 @@
 namespace ACSP::Controller
 {
     namespace LTI = ACSP::LTI;
-    namespace matrix = ACSP::math;
 
     class LADRC2
     {
